@@ -10,7 +10,8 @@ from Utils.Dictionaries import team_index_07, team_index_08, team_index_12, team
 
 # season_array = ["2007-08", "2008-09", "2009-10", "2010-11", "2011-12", "2012-13", "2013-14", "2014-15", "2015-16",
 #                 "2016-17", "2017-18", "2018-19", "2019-20", "2020-21", "2021-22", "2022-23"]
-season_array = ["2012-13", "2013-14", "2014-15", "2015-16", "2016-17", "2017-18", "2018-19", "2019-20", "2020-21", "2021-22", "2022-23"]
+# season_array = ["2012-13", "2013-14", "2014-15", "2015-16", "2016-17", "2017-18", "2018-19", "2019-20", "2020-21", "2021-22", "2022-23"]
+season_array = ["2018-19", "2019-20", "2020-21", "2021-22", "2022-23"]
 
 df = pd.DataFrame
 scores = []
@@ -20,6 +21,8 @@ OU_Cover = []
 games = []
 days_rest_away = []
 days_rest_home = []
+home_score = []
+away_score = []
 teams_con = sqlite3.connect("../../Data/teams.sqlite")
 odds_con = sqlite3.connect("../../Data/odds.sqlite")
 
@@ -59,6 +62,8 @@ for season in tqdm(season_array):
             OU.append(row[5])
             days_rest_home.append(row[11])
             days_rest_away.append(row[12])
+            home_score.append(row[13])
+            away_score.append(row[14])
             if row[10] > 0:
                 win_margin.append(1)
             else:
@@ -91,6 +96,7 @@ for season in tqdm(season_array):
                     home_team_series = team_df.iloc[team_index_14.get(home_team)]
                     away_team_series = team_df.iloc[team_index_14.get(away_team)]
                 except Exception as e:
+                    print(year, month, day)
                     print(home_team)
                     raise e
             game = pd.concat([home_team_series, away_team_series.rename(
@@ -108,6 +114,8 @@ frame['OU'] = np.asarray(OU)
 frame['OU-Cover'] = np.asarray(OU_Cover)
 frame['Days-Rest-Home'] = np.asarray(days_rest_home)
 frame['Days-Rest-Away'] = np.asarray(days_rest_away)
+frame['points'] = np.asarray(home_score)
+frame['points.1'] = np.asarray(away_score)
 # fix types
 for field in frame.columns.values:
     if 'TEAM_' in field  or 'Date' in field or field not in frame:

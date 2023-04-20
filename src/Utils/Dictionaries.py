@@ -169,7 +169,7 @@ team_index_14 = {
     'Atlanta Hawks': 0,
     'Boston Celtics': 1,
     'Brooklyn Nets': 2,
-    'Charlotte Bobcats': 3,
+    'Charlotte Hornets': 3,
     'Chicago Bulls': 4,
     'Cleveland Cavaliers': 5,
     'Dallas Mavericks': 6,

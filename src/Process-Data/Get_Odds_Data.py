@@ -11,8 +11,8 @@ from sbrscrape import Scoreboard
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from Utils.tools import get_date
 
-year = [2022, 2023]
-season = ["2022-23"]
+year = [2018, 2019, 2020, 2021, 2022, 2023]
+season = ["2018-19", "2019-20", "2020-21", "2021-22", "2022-23"]
 
 month = [10, 11, 12, 1, 2, 3, 4, 5, 6]
 days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
@@ -22,11 +22,10 @@ end_year_pointer = year[0]
 count = 0
 
 sportsbook='fanduel'
-df_data = []
-
 con = sqlite3.connect("../../Data/odds.sqlite")
 
 for season1 in tqdm(season):
+    df_data = []
     teams_last_played = {}
     for month1 in tqdm(month):
         if month1 == 1:
@@ -43,6 +42,10 @@ for season1 in tqdm(season):
                 if month1 == datetime.now().month and day1 >= datetime.now().day:
                     continue
                 if month1 > datetime.now().month:
+                    continue
+                date_string = f"{end_year_pointer}-{month1:02}-{day1:02}"
+                all_star_dates = ["2021-03-07", "2020-02-14", "2020-02-16"]
+                if date_string in all_star_dates:
                     continue
             sb = Scoreboard(date=f"{end_year_pointer}-{month1:02}-{day1:02}")
             if not hasattr(sb, "games"):
@@ -78,7 +81,9 @@ for season1 in tqdm(season):
                         'Points': game['away_score'] + game['home_score'],
                         'Win_Margin': game['home_score'] - game['away_score'],
                         'Days_Rest_Home': home_games_rested.days,
-                        'Days_Rest_Away': away_games_rested.days
+                        'Days_Rest_Away': away_games_rested.days,
+                        'Home_Score': game['home_score'],
+                        'Away_Score': game['away_score']
                     })
                 except KeyError:
                     print(f"No {sportsbook} odds data found for game: {game}")
